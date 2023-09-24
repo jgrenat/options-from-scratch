@@ -2,6 +2,14 @@ import { expect, test } from "vitest";
 import { A, O, R, none, some } from "./options";
 import { pipe } from "./pipe";
 
+/**
+ * A little bit of context: The billion dollar mistake
+ * 
+ * https://www.infoq.com/presentations/Null-References-The-Billion-Dollar-Mistake-Tony-Hoare/ 
+ * 
+ * The goal of this kata is to build a simple option implementation, a functionnal alternative to undefined/null. 
+ * 
+ */
 
 test("is some?", () => {
   const firstOption = some(36);
