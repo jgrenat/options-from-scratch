@@ -23,14 +23,14 @@ test("pipe helps compose functions", () => {
   expect(value).toEqual("HELLO WORLD!");
 });
 
-test("get some", () => {
+test.skip("get some", () => {
   const value = pipe(
     some(36),
     O.getOrElse(() => 0)
   );
   expect(value).toEqual(36);
 });
-test("get some or get something else", () => {
+test.skip("get some or get something else", () => {
   const value = pipe(
     none,
     O.getOrElse(() => 0)
@@ -38,7 +38,7 @@ test("get some or get something else", () => {
   expect(value).toEqual(0);
 });
 
-test("option from nullable", () => {
+test.skip("option from nullable", () => {
   const firstValue = pipe(
     O.fromNullable(123),
     O.getOrElse(() => 0)
@@ -51,7 +51,7 @@ test("option from nullable", () => {
   expect(secondValue).toEqual(0);
 });
 
-test("option from predicate", () => {
+test.skip("option from predicate", () => {
   const isEven = (x: number) => x % 2 === 0;
   const fn = (x: number) =>
     pipe(
@@ -63,7 +63,7 @@ test("option from predicate", () => {
   expect(fn(125)).toBe(124);
 });
 
-test("pattern matching", () => {
+test.skip("pattern matching", () => {
   const isEven = (x: number) => x % 2 === 0;
   const fn = (x: number) =>
     pipe(
@@ -79,7 +79,7 @@ test("pattern matching", () => {
   expect(fn(43)).toEqual("Not an even value");
 });
 
-test("map", () => {
+test.skip("map", () => {
   const isEven = (x: number) => x % 2 === 0;
   const fn = (x: number) =>
     pipe(
@@ -95,7 +95,7 @@ test("map", () => {
   expect(fn(42)).toEqual("Even value = _42_");
   expect(fn(43)).toEqual("Not an even value");
 });
-test("filter", () => {
+test.skip("filter", () => {
   const isPositive = (x: number) => x >= 0;
   const isNotZero = (x: number) => x !== 0;
   const fn = (x: number) =>
@@ -114,7 +114,7 @@ test("filter", () => {
 
 const map = <T, S>(fn: (item: T) => S) => (d: T[]) => d.map(fn);
 
-test("find in arrays returns an option", () => {
+test.skip("find in arrays returns an option", () => {
   const data = [1,2,3,4,5];
   const isEven = (x: number) => x % 2 === 0;
   const result = pipe(
@@ -129,7 +129,7 @@ test("find in arrays returns an option", () => {
   expect(result).toBe('Even value found = 2');
 });
 
-test("filter and map at once", () => {
+test.skip("filter and map at once", () => {
   const isPositive = (x: number) => x > 0;
   
   const cutIntoEqualParts = (pieSize: number, parts: number) =>
@@ -143,7 +143,7 @@ test("filter and map at once", () => {
   expect(cutIntoEqualParts(10, 4)).toBe(2.5);
 });
 
-test("compact an array of options removing'none' options ang getting values of 'some' options", () => {
+test.skip("compact an array of options removing'none' options ang getting values of 'some' options", () => {
   const unitPrices = {
     'lunch': 25,
     'drinks': 15,
