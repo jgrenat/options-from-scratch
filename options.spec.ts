@@ -4,11 +4,11 @@ import { pipe } from "./pipe";
 
 /**
  * A little bit of context: The billion dollar mistake
- * 
- * https://www.infoq.com/presentations/Null-References-The-Billion-Dollar-Mistake-Tony-Hoare/ 
- * 
- * The goal of this kata is to build a simple option implementation, a functionnal alternative to undefined/null. 
- * 
+ *
+ * https://www.infoq.com/presentations/Null-References-The-Billion-Dollar-Mistake-Tony-Hoare/
+ *
+ * The goal of this kata is to build a simple option implementation, a functionnal alternative to undefined/null.
+ *
  */
 
 test("is some?", () => {
@@ -31,14 +31,14 @@ test("pipe helps compose functions", () => {
   expect(value).toEqual("HELLO WORLD!");
 });
 
-test.skip("get some", () => {
+test("get some", () => {
   const value = pipe(
     some(36),
     O.getOrElse(() => 0)
   );
   expect(value).toEqual(36);
 });
-test.skip("get some or get something else", () => {
+test("get some or get something else", () => {
   const value = pipe(
     none,
     O.getOrElse(() => 0)
@@ -46,7 +46,7 @@ test.skip("get some or get something else", () => {
   expect(value).toEqual(0);
 });
 
-test.skip("option from nullable", () => {
+test("option from nullable", () => {
   const firstValue = pipe(
     O.fromNullable(123),
     O.getOrElse(() => 0)
@@ -59,7 +59,15 @@ test.skip("option from nullable", () => {
   expect(secondValue).toEqual(0);
 });
 
-test.skip("option from predicate", () => {
+test("option from nullable with falsy values", () => {
+  const value = pipe(
+    O.fromNullable(0),
+    O.getOrElse(() => -1)
+  );
+  expect(value).toEqual(0);
+});
+
+test("option from predicate", () => {
   const isEven = (x: number) => x % 2 === 0;
   const fn = (x: number) =>
     pipe(
@@ -71,7 +79,7 @@ test.skip("option from predicate", () => {
   expect(fn(125)).toBe(124);
 });
 
-test.skip("pattern matching", () => {
+test("pattern matching", () => {
   const isEven = (x: number) => x % 2 === 0;
   const fn = (x: number) =>
     pipe(
@@ -87,7 +95,7 @@ test.skip("pattern matching", () => {
   expect(fn(43)).toEqual("Not an even value");
 });
 
-test.skip("map", () => {
+test("map", () => {
   const isEven = (x: number) => x % 2 === 0;
   const fn = (x: number) =>
     pipe(
@@ -103,7 +111,7 @@ test.skip("map", () => {
   expect(fn(42)).toEqual("Even value = _42_");
   expect(fn(43)).toEqual("Not an even value");
 });
-test.skip("filter", () => {
+test("filter", () => {
   const isPositive = (x: number) => x >= 0;
   const isNotZero = (x: number) => x !== 0;
   const fn = (x: number) =>
@@ -120,26 +128,44 @@ test.skip("filter", () => {
   expect(fn(-0.1)).not.toEqual(0);
 });
 
-const map = <T, S>(fn: (item: T) => S) => (d: T[]) => d.map(fn);
+const map =
+  <T, S>(fn: (item: T) => S) =>
+  (d: T[]) =>
+    d.map(fn);
 
-test.skip("find in arrays returns an option", () => {
-  const data = [1,2,3,4,5];
+test("find in arrays returns an option", () => {
+  const data = [1, 2, 3, 4, 5];
   const isEven = (x: number) => x % 2 === 0;
   const result = pipe(
-      data,
-      A.findFirst(isEven),
-      O.match(
-        () => "No even value in the array",
-        (value) => `Even value found = ${value}`
-      )
-    );
+    data,
+    A.findFirst(isEven),
+    O.match(
+      () => "No even value in the array",
+      (value) => `Even value found = ${value}`
+    )
+  );
 
-  expect(result).toBe('Even value found = 2');
+  expect(result).toBe("Even value found = 2");
 });
 
-test.skip("filter and map at once", () => {
+test("find in arrays should work with null values", () => {
+  const data = ["not null", "not null either", null];
+  const isNull = (x: string | null) => x === null;
+  const result = pipe(
+    data,
+    A.findFirst(isNull),
+    O.match(
+      () => "No null value in array",
+      () => "Null value found"
+    )
+  );
+
+  expect(result).toBe("Null value found");
+});
+
+test("filter and map at once", () => {
   const isPositive = (x: number) => x > 0;
-  
+
   const cutIntoEqualParts = (pieSize: number, parts: number) =>
     pipe(
       some(parts),
@@ -151,30 +177,32 @@ test.skip("filter and map at once", () => {
   expect(cutIntoEqualParts(10, 4)).toBe(2.5);
 });
 
-test.skip("compact an array of options removing'none' options ang getting values of 'some' options", () => {
+test("compact an array of options removing'none' options and getting values of 'some' options", () => {
   const unitPrices = {
-    'lunch': 25,
-    'drinks': 15,
-    'wellness': 5,
-  }
+    lunch: 25,
+    drinks: 15,
+    wellness: 5,
+  };
   const planning: Array<[string, number]> = [
-    ['breakfast', 17],
-    ['lunch', 17],
-    ['wellness', 10],
-    ['drinks', 21],
+    ["breakfast", 17],
+    ["lunch", 17],
+    ["wellness", 10],
+    ["drinks", 21],
   ];
 
   const price = pipe(
-      planning,
-      A.map(([service, pax]) => pipe(
+    planning,
+    A.map(([service, pax]) =>
+      pipe(
         unitPrices,
         R.toArray,
         A.findFirst(([serviceName, _price]) => service === serviceName),
         O.map(([_serviceName, price]) => pax * price)
-      )),
-      A.compact,
-      A.reduce(0, (acc: number, price: number) => acc + price)
-    );
+      )
+    ),
+    A.compact,
+    A.reduce(0, (acc: number, price: number) => acc + price)
+  );
 
   expect(price).toBe(790);
 });
